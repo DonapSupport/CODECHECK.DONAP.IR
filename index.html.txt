@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بررسی کد ملی</title>
+</head>
+
+<body>
+
+    <h2>بررسی صحت کد ملی</h2>
+
+    <input
+        type="text"
+        id="nationalCode"
+        maxlength="10"
+        inputmode="numeric"
+        placeholder="کد ملی را وارد کنید"
+    >
+
+    <button onclick="checkNationalCode()">
+        بررسی کد ملی
+    </button>
+
+    <p id="result"></p>
+
+
+<script>
+
+function validateNationalCode(code) {
+
+    code = code.toString().replace(/\D/g, '');
+
+    if (code.length !== 10) {
+        return false;
+    }
+
+    // جلوگیری از کدهای تکراری مثل 1111111111
+    if (/^(\d)\1{9}$/.test(code)) {
+        return false;
+    }
+
+    var sum = 0;
+
+    for (var i = 0; i < 9; i++) {
+        sum += parseInt(code[i]) * (10 - i);
+    }
+
+    var remainder = sum % 11;
+    var control = parseInt(code[9]);
+
+    if (remainder < 2) {
+        return control === remainder;
+    }
+
+    return control === 11 - remainder;
+}
+
+
+function checkNationalCode() {
+
+    var code = document.getElementById("nationalCode").value;
+    var result = document.getElementById("result");
+
+    if (validateNationalCode(code)) {
+
+        result.innerHTML = "✅ کد ملی معتبر است";
+        result.style.color = "green";
+
+    } else {
+
+        result.innerHTML = "❌ کد ملی نامعتبر است";
+        result.style.color = "red";
+
+    }
+}
+
+</script>
+
+</body>
+</html>
